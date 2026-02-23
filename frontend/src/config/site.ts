@@ -25,8 +25,8 @@ export const siteConfig = {
     ],
   },
   contact: {
-    phone: "(208) 701-5502",
-    phoneTel: "+12087015502",
+    phone: "(208) 470-8020",
+    phoneTel: "+12084708020",
     email: "info@ductductclean.com",
     address: "Idaho Falls, ID 83401",
   },
