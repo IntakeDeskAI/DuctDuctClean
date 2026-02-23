@@ -64,9 +64,11 @@ export default function PhoneDashboard({ calls }: PhoneDashboardProps) {
         body: JSON.stringify({ action: "purchase_number", area_code: "208" }),
       });
       const data = await res.json();
-      if (data.phone_number) {
-        setPhoneNumber(data.phone_number);
-        setSetupResult(`Number purchased: ${data.phone_number}`);
+      // Bland API may nest the phone number inside data.data
+      const number = data.phone_number || data.data?.phone_number;
+      if (number) {
+        setPhoneNumber(number);
+        setSetupResult(`Number purchased: ${number}`);
       } else {
         setSetupResult(
           `Error: ${data.message || data.error || JSON.stringify(data)}`
