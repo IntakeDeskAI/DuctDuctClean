@@ -20,7 +20,7 @@ export const servicesDetail: ServiceDetail[] = [
     icon: Home,
     title: "Residential Duct Cleaning",
     tagline: "Breathe cleaner air in your home",
-    price: "Starting at $299",
+    price: "Starting at $499",
     description:
       "Our residential duct cleaning service thoroughly removes dust, pollen, pet dander, mold spores, and other contaminants from your entire HVAC system. We use industry-leading HEPA-filtered vacuum systems and rotary brush technology to clean every supply and return duct in your home, leaving your air noticeably fresher.",
     included: [

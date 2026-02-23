@@ -12,7 +12,7 @@ const services = [
       "Improves HVAC efficiency up to 30%",
       "Reduces energy costs",
     ],
-    price: "Starting at $299",
+    price: "Starting at $499",
     localNote:
       "Perfect for Idaho Falls homes dealing with seasonal dust and pollen.",
   },
