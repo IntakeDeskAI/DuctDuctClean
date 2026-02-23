@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Badge from "@/components/ui/Badge";
+import AIAssistantPanel from "@/components/admin/AIAssistantPanel";
 import type { ContactSubmission } from "@/types";
 import { formatDate } from "@/lib/utils";
 import { formatPhone } from "@/lib/utils";
@@ -189,6 +190,8 @@ export default function LeadDetail({ lead }: LeadDetailProps) {
           </button>
         </div>
       </div>
+
+      <AIAssistantPanel lead={lead} />
     </div>
   );
 }
