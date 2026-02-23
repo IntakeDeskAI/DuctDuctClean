@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Phone, Mail, MapPin } from "lucide-react";
 import { siteConfig } from "@/config/site";
+import PhoneLink from "@/components/ui/PhoneLink";
 
 const footerLinks = {
   services: [
@@ -51,13 +52,14 @@ export default function Footer() {
               Family-Owned in Idaho Falls since {siteConfig.established}
             </p>
             <div className="flex flex-col gap-3 text-sm">
-              <a
+              <PhoneLink
                 href={`tel:${siteConfig.contact.phoneTel}`}
+                location="footer"
                 className="flex items-center gap-2 hover:text-white transition-colors"
               >
                 <Phone className="h-4 w-4 text-brand-400" />
                 {siteConfig.contact.phone}
-              </a>
+              </PhoneLink>
               <a
                 href={`mailto:${siteConfig.contact.email}`}
                 className="flex items-center gap-2 hover:text-white transition-colors"

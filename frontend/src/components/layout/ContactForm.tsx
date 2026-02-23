@@ -8,6 +8,7 @@ import {
   contactSchema,
   type ContactFormData,
 } from "@/lib/validations/contact";
+import { trackFormSubmission } from "@/lib/analytics";
 
 const inputStyles =
   "w-full rounded-lg border border-gray-300 px-4 py-3 text-sm text-gray-900 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 outline-none transition-colors";
@@ -31,6 +32,7 @@ export default function ContactForm() {
     });
 
     if (res.ok) {
+      trackFormSubmission(data.serviceType);
       setSubmitted(true);
       reset();
     }

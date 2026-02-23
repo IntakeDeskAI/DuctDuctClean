@@ -12,6 +12,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { siteConfig } from "@/config/site";
+import PhoneLink from "@/components/ui/PhoneLink";
 
 const trustBadges = [
   { icon: Shield, text: "Licensed & Insured" },
@@ -68,13 +69,14 @@ export default function HeroSection() {
                 Get a Free Quote
                 <ArrowRight className="h-4 w-4" />
               </a>
-              <a
+              <PhoneLink
                 href={`tel:${siteConfig.contact.phoneTel}`}
+                location="hero"
                 className="inline-flex items-center justify-center gap-2 rounded-lg border border-brand-400/30 bg-brand-800/50 px-6 py-3.5 text-sm font-semibold text-white hover:bg-brand-700/50 transition-colors"
               >
                 <Phone className="h-4 w-4" />
                 Call Now: {siteConfig.contact.phone}
-              </a>
+              </PhoneLink>
             </div>
 
             {/* Service Area */}

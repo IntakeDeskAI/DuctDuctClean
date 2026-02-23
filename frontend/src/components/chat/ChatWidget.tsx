@@ -5,6 +5,7 @@ import { MessageCircle, X, Send, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import ChatMessage from "./ChatMessage";
 import { streamFetch } from "@/lib/ai/stream-client";
+import { trackChatOpen, trackChatMessage } from "@/lib/analytics";
 
 interface Message {
   role: "user" | "assistant";
@@ -44,6 +45,7 @@ export default function ChatWidget() {
     setMessages(updatedMessages);
     setInput("");
     setIsStreaming(true);
+    trackChatMessage();
 
     const assistantMessage: Message = { role: "assistant", content: "" };
     setMessages((prev) => [...prev, assistantMessage]);
@@ -83,7 +85,10 @@ export default function ChatWidget() {
       {/* Floating bubble */}
       {!isOpen && (
         <button
-          onClick={() => setIsOpen(true)}
+          onClick={() => {
+            setIsOpen(true);
+            trackChatOpen();
+          }}
           className="fixed bottom-6 right-6 z-40 h-14 w-14 rounded-full bg-brand-600 text-white shadow-lg hover:bg-brand-700 transition-all hover:scale-105 flex items-center justify-center"
           aria-label="Open chat"
         >

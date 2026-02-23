@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Menu, X, Phone } from "lucide-react";
 import { siteConfig } from "@/config/site";
+import { trackPhoneClick } from "@/lib/analytics";
 
 const navLinks = [
   { label: "Home", href: "/", anchor: "#hero" },
@@ -74,6 +75,7 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-4">
             <a
               href={`tel:${siteConfig.contact.phoneTel}`}
+              onClick={() => trackPhoneClick("navbar")}
               className="flex items-center gap-2 text-sm font-medium text-brand-700 hover:text-brand-800"
             >
               <Phone className="h-4 w-4" />
@@ -145,6 +147,7 @@ export default function Navbar() {
               <div className="mt-4 px-3 flex flex-col gap-3">
                 <a
                   href={`tel:${siteConfig.contact.phoneTel}`}
+                  onClick={() => trackPhoneClick("navbar_mobile")}
                   className="flex items-center gap-2 text-sm font-medium text-brand-700"
                 >
                   <Phone className="h-4 w-4" />
