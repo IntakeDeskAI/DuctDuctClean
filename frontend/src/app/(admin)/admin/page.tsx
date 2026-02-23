@@ -8,17 +8,36 @@ import type { ContactSubmission } from "@/types";
 
 export const dynamic = "force-dynamic";
 
-async function getLeads(): Promise<ContactSubmission[]> {
+async function getDashboardData() {
   const supabase = createAdminClient();
-  const { data } = await supabase
-    .from("contact_submissions")
-    .select("*")
-    .order("created_at", { ascending: false });
-  return (data as ContactSubmission[]) || [];
+  const now = new Date();
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+
+  const [leadsResult, emailsResult, callsResult] = await Promise.all([
+    supabase
+      .from("contact_submissions")
+      .select("*")
+      .order("created_at", { ascending: false }),
+    supabase
+      .from("email_logs")
+      .select("id", { count: "exact", head: true })
+      .gte("created_at", monthStart.toISOString()),
+    supabase
+      .from("call_logs")
+      .select("id", { count: "exact", head: true })
+      .gte("created_at", monthStart.toISOString()),
+  ]);
+
+  return {
+    leads: (leadsResult.data as ContactSubmission[]) || [],
+    emailsSentThisMonth: emailsResult.count || 0,
+    callsThisMonth: callsResult.count || 0,
+  };
 }
 
 export default async function AdminDashboardPage() {
-  const leads = await getLeads();
+  const { leads, emailsSentThisMonth, callsThisMonth } =
+    await getDashboardData();
   const recentLeads = leads.slice(0, 5);
 
   return (
@@ -34,7 +53,11 @@ export default async function AdminDashboardPage() {
         </div>
       </div>
 
-      <DashboardStats leads={leads} />
+      <DashboardStats
+        leads={leads}
+        emailsSentThisMonth={emailsSentThisMonth}
+        callsThisMonth={callsThisMonth}
+      />
 
       {/* Recent Leads */}
       <div className="mt-8 bg-white rounded-xl border border-gray-200">

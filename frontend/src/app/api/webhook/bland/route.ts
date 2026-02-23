@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { sendEmail } from "@/lib/email/resend";
+import { newLeadAdminNotification } from "@/lib/email/templates";
+import { getSetting } from "@/lib/supabase/settings";
+import type { ContactSubmission } from "@/types";
 
 function verifyWebhookSignature(
   secret: string,
@@ -113,6 +117,11 @@ export async function POST(request: Request) {
           .from("call_logs")
           .update({ contact_submission_id: lead.id })
           .eq("id", callLog.id);
+
+        // Send admin notification email (fire-and-forget)
+        notifyAdmin(lead as ContactSubmission).catch((err) =>
+          console.error("Admin notification error:", err)
+        );
       }
     }
 
@@ -120,5 +129,26 @@ export async function POST(request: Request) {
   } catch (err) {
     console.error("Webhook processing error:", err);
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+  }
+}
+
+async function notifyAdmin(lead: ContactSubmission) {
+  const notifications = await getSetting<{
+    email_on_new_lead: boolean;
+    admin_email: string;
+  }>("notifications");
+
+  const adminEmail =
+    notifications?.admin_email || process.env.ADMIN_NOTIFICATION_EMAIL;
+
+  if (notifications?.email_on_new_lead && adminEmail) {
+    const template = newLeadAdminNotification(lead);
+    await sendEmail({
+      to: adminEmail,
+      subject: template.subject,
+      html: template.html,
+      template: "new_lead_admin",
+      contactSubmissionId: lead.id,
+    });
   }
 }

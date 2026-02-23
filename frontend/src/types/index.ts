@@ -75,6 +75,11 @@ export interface ContactSubmission {
   status: "new" | "contacted" | "quoted" | "converted" | "closed";
   notes: string | null;
   source: string;
+  revenue: number | null;
+  completed_at: string | null;
+  last_email_sent_at: string | null;
+  referral_source: string | null;
+  referral_code: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -97,6 +102,32 @@ export interface CallLog {
   transferred: boolean;
   created_at: string;
   updated_at: string;
+}
+
+export interface EmailLog {
+  id: string;
+  to_email: string;
+  to_name: string | null;
+  from_email: string;
+  subject: string;
+  template: string;
+  body_preview: string | null;
+  resend_id: string | null;
+  status: "sent" | "delivered" | "bounced" | "failed";
+  contact_submission_id: string | null;
+  metadata: Record<string, unknown>;
+  created_at: string;
+}
+
+export interface AutomationRun {
+  id: string;
+  contact_submission_id: string;
+  automation_type: string;
+  email_log_id: string | null;
+  status: "pending" | "completed" | "skipped" | "failed";
+  scheduled_for: string | null;
+  executed_at: string | null;
+  created_at: string;
 }
 
 export interface BlogSection {

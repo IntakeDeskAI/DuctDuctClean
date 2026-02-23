@@ -7,6 +7,7 @@ export const contactSchema = z.object({
   address: z.string().min(5, "Address is required"),
   serviceType: z.string().min(1, "Please select a service"),
   message: z.string().optional(),
+  referralCode: z.string().optional(),
 });
 
 export type ContactFormData = z.infer<typeof contactSchema>;

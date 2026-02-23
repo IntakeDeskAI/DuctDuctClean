@@ -180,6 +180,22 @@ export default function ContactForm() {
         />
       </div>
 
+      <div>
+        <label
+          htmlFor="referralCode"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
+          Referral Code (Optional)
+        </label>
+        <input
+          id="referralCode"
+          type="text"
+          {...register("referralCode")}
+          placeholder="e.g. DUCT-JOHN-7X3K"
+          className={inputStyles}
+        />
+      </div>
+
       <button
         type="submit"
         disabled={isSubmitting}
