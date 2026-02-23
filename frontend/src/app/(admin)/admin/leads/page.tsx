@@ -3,13 +3,19 @@ import LeadsTable from "@/components/admin/LeadsTable";
 import type { ContactSubmission } from "@/types";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
+export const fetchCache = "force-no-store";
 
 async function getLeads(): Promise<ContactSubmission[]> {
   const supabase = createAdminClient();
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("contact_submissions")
     .select("*")
     .order("created_at", { ascending: false });
+  if (error) {
+    console.error("getLeads error:", JSON.stringify(error));
+    return [];
+  }
   return (data as ContactSubmission[]) || [];
 }
 
