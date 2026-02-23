@@ -39,3 +39,5 @@ htmlcov/
 
 # Supabase
 supabase/.temp/
+.vercel
+.env*.local
