@@ -7,6 +7,7 @@ import {
   Bell,
   Zap,
   Star,
+  CalendarDays,
   Loader2,
   CheckCircle2,
   Send,
@@ -22,6 +23,7 @@ const tabs = [
   { id: "notifications", label: "Notifications", icon: Bell },
   { id: "automations", label: "Automations", icon: Zap },
   { id: "reviews_referrals", label: "Reviews & Referrals", icon: Star },
+  { id: "tech_scheduling", label: "Scheduling", icon: CalendarDays },
 ];
 
 export default function SettingsForm({ initialSettings }: SettingsFormProps) {
@@ -319,6 +321,79 @@ export default function SettingsForm({ initialSettings }: SettingsFormProps) {
                   />
                 </div>
               </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === "tech_scheduling" && (
+          <div>
+            <h3 className="text-lg font-bold text-gray-900 mb-1">
+              Scheduling Settings
+            </h3>
+            <p className="text-sm text-gray-500 mb-6">
+              Configure job scheduling and technician notification defaults.
+            </p>
+            <div className="space-y-5">
+              <Toggle
+                label="Notifications Enabled"
+                description="Allow the system to send notifications to technicians when jobs are scheduled"
+                checked={Boolean(sectionData.notifications_enabled)}
+                onChange={(v) =>
+                  updateField("tech_scheduling", "notifications_enabled", v)
+                }
+              />
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Default Notification Method
+                </label>
+                <select
+                  value={(sectionData.default_notification as string) || "all"}
+                  onChange={(e) =>
+                    updateField("tech_scheduling", "default_notification", e.target.value)
+                  }
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 outline-none"
+                >
+                  <option value="all">All Channels (Call + SMS + Email)</option>
+                  <option value="phone">Phone Call Only</option>
+                  <option value="sms">SMS Only</option>
+                  <option value="email">Email Only</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Default Job Duration (minutes)
+                </label>
+                <select
+                  value={String(sectionData.default_job_duration || 120)}
+                  onChange={(e) =>
+                    updateField("tech_scheduling", "default_job_duration", parseInt(e.target.value))
+                  }
+                  className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 outline-none"
+                >
+                  <option value="60">1 hour</option>
+                  <option value="90">1.5 hours</option>
+                  <option value="120">2 hours</option>
+                  <option value="150">2.5 hours</option>
+                  <option value="180">3 hours</option>
+                  <option value="240">4 hours</option>
+                </select>
+              </div>
+              <Toggle
+                label="24-Hour Reminder"
+                description="Send a reminder SMS to the technician 24 hours before a scheduled job"
+                checked={Boolean(sectionData.send_reminder_24h)}
+                onChange={(v) =>
+                  updateField("tech_scheduling", "send_reminder_24h", v)
+                }
+              />
+              <Toggle
+                label="2-Hour Reminder"
+                description="Send a reminder SMS to the technician 2 hours before a scheduled job"
+                checked={Boolean(sectionData.send_reminder_2h)}
+                onChange={(v) =>
+                  updateField("tech_scheduling", "send_reminder_2h", v)
+                }
+              />
             </div>
           </div>
         )}

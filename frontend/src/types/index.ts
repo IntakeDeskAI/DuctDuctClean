@@ -130,6 +130,61 @@ export interface AutomationRun {
   created_at: string;
 }
 
+export interface Technician {
+  id: string;
+  name: string;
+  phone: string;
+  email: string | null;
+  services: string[];
+  max_jobs_per_day: number;
+  notification_preference: "all" | "phone" | "sms" | "email";
+  is_active: boolean;
+  color: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface JobSchedule {
+  id: string;
+  contact_submission_id: string;
+  technician_id: string;
+  scheduled_date: string;
+  scheduled_time: string;
+  estimated_duration: number;
+  status:
+    | "scheduled"
+    | "notified"
+    | "confirmed"
+    | "in_progress"
+    | "completed"
+    | "cancelled";
+  notification_status:
+    | "pending"
+    | "calling"
+    | "sms_sent"
+    | "emailed"
+    | "confirmed"
+    | "failed";
+  notify_at: string | null;
+  notes: string | null;
+  created_at: string;
+  updated_at: string;
+  // Joined relations
+  technician?: Technician;
+  lead?: ContactSubmission;
+}
+
+export interface TechNotification {
+  id: string;
+  job_schedule_id: string;
+  technician_id: string;
+  channel: "bland_call" | "sms" | "email";
+  status: "sent" | "delivered" | "confirmed" | "failed";
+  external_id: string | null;
+  response: string | null;
+  created_at: string;
+}
+
 export interface BlogSection {
   heading?: string;
   content: string;

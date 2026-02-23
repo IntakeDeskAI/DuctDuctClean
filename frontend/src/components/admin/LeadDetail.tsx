@@ -16,6 +16,7 @@ import {
   CheckCircle2,
   Share2,
   Send,
+  CalendarPlus,
 } from "lucide-react";
 import Link from "next/link";
 import Badge from "@/components/ui/Badge";
@@ -122,13 +123,22 @@ export default function LeadDetail({ lead }: LeadDetailProps) {
             )}
           </div>
         </div>
-        <button
-          onClick={() => setShowEmailModal(true)}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-600 text-white text-sm font-medium hover:bg-brand-700 transition-colors"
-        >
-          <Send className="h-4 w-4" />
-          Send Email
-        </button>
+        <div className="flex items-center gap-3">
+          <Link
+            href={`/admin/schedule?lead=${lead.id}`}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-green-600 text-white text-sm font-medium hover:bg-green-700 transition-colors"
+          >
+            <CalendarPlus className="h-4 w-4" />
+            Schedule Job
+          </Link>
+          <button
+            onClick={() => setShowEmailModal(true)}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-600 text-white text-sm font-medium hover:bg-brand-700 transition-colors"
+          >
+            <Send className="h-4 w-4" />
+            Send Email
+          </button>
+        </div>
       </div>
 
       {/* Completion Banner */}

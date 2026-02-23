@@ -1,5 +1,5 @@
 import { siteConfig } from "@/config/site";
-import type { ContactSubmission } from "@/types";
+import type { ContactSubmission, Technician, JobSchedule } from "@/types";
 
 const brandColor = "#1e40af";
 const accentColor = "#16a34a";
@@ -271,6 +271,90 @@ export function referralInvite(
       <a href="${siteConfig.url}/contact" style="display:inline-block;background-color:${brandColor};color:#ffffff;text-decoration:none;padding:12px 24px;border-radius:8px;font-size:14px;font-weight:600;">
         Visit Our Website
       </a>
+    `),
+  };
+}
+
+// 8. Tech Job Notification
+export function techJobNotification(
+  tech: Technician,
+  lead: ContactSubmission,
+  schedule: JobSchedule
+): { subject: string; html: string } {
+  const scheduledDate = new Date(schedule.scheduled_date + "T00:00:00");
+  const dateStr = scheduledDate.toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+  });
+
+  const [hours, minutes] = schedule.scheduled_time.split(":");
+  const h = parseInt(hours);
+  const ampm = h >= 12 ? "PM" : "AM";
+  const h12 = h % 12 || 12;
+  const timeStr = `${h12}:${minutes} ${ampm}`;
+
+  const confirmUrl = `${siteConfig.url}/api/webhook/tech-confirm?schedule=${schedule.id}&tech=${tech.id}&action=confirm`;
+
+  return {
+    subject: `New Job Assignment: ${getServiceLabel(lead.service_type)} on ${dateStr}`,
+    html: emailWrapper(`
+      <h2 style="margin:0 0 16px;color:#111827;font-size:18px;">New Job Assignment</h2>
+      <p style="color:#374151;font-size:14px;line-height:1.6;margin:0 0 20px;">
+        Hi ${tech.name.split(" ")[0]}, you've been assigned a new job. Here are the details:
+      </p>
+
+      <div style="background-color:#f0f9ff;border-radius:12px;padding:20px;margin:0 0 24px;">
+        <table cellpadding="0" cellspacing="0" width="100%">
+          <tr>
+            <td style="padding:6px 0;">
+              <strong style="color:#6b7280;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;">Service</strong><br>
+              <span style="color:#111827;font-size:15px;font-weight:600;">${getServiceLabel(lead.service_type)}</span>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:6px 0;">
+              <strong style="color:#6b7280;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;">Date & Time</strong><br>
+              <span style="color:#111827;font-size:15px;font-weight:600;">${dateStr} at ${timeStr}</span>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:6px 0;">
+              <strong style="color:#6b7280;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;">Duration</strong><br>
+              <span style="color:#111827;font-size:15px;">${schedule.estimated_duration} minutes</span>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:6px 0;">
+              <strong style="color:#6b7280;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;">Address</strong><br>
+              <span style="color:#111827;font-size:15px;">${lead.address}</span>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:12px 0 6px;border-top:1px solid #dbeafe;">
+              <strong style="color:#6b7280;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;">Customer</strong><br>
+              <span style="color:#111827;font-size:15px;">${lead.name}</span><br>
+              <a href="tel:${lead.phone}" style="color:${brandColor};font-size:14px;">${lead.phone}</a>
+            </td>
+          </tr>
+          ${schedule.notes ? `<tr>
+            <td style="padding:6px 0;">
+              <strong style="color:#6b7280;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;">Notes</strong><br>
+              <span style="color:#111827;font-size:14px;">${schedule.notes}</span>
+            </td>
+          </tr>` : ""}
+        </table>
+      </div>
+
+      <div style="text-align:center;margin:0 0 24px;">
+        <a href="${confirmUrl}" style="display:inline-block;background-color:${accentColor};color:#ffffff;text-decoration:none;padding:14px 32px;border-radius:8px;font-size:15px;font-weight:600;">
+          Confirm This Job
+        </a>
+      </div>
+
+      <p style="color:#6b7280;font-size:13px;line-height:1.6;margin:0;text-align:center;">
+        Can't make it? Reply to this email or call dispatch at ${siteConfig.contact.phone}
+      </p>
     `),
   };
 }

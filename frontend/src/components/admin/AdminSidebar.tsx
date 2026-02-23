@@ -2,11 +2,13 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, Users, Phone, Mail, Megaphone, BookOpen, Settings, LogOut } from "lucide-react";
+import { LayoutDashboard, Users, Phone, Mail, CalendarDays, HardHat, Megaphone, BookOpen, Settings, LogOut } from "lucide-react";
 
 const navItems = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
   { label: "Leads", href: "/admin/leads", icon: Users },
+  { label: "Schedule", href: "/admin/schedule", icon: CalendarDays },
+  { label: "Technicians", href: "/admin/technicians", icon: HardHat },
   { label: "Phone", href: "/admin/phone", icon: Phone },
   { label: "Email", href: "/admin/email", icon: Mail },
   { label: "Marketing", href: "/admin/marketing", icon: Megaphone },
