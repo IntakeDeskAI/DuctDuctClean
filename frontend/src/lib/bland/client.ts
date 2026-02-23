@@ -1,19 +1,38 @@
 const BLAND_BASE_URL = "https://api.bland.ai/v1";
 
 function getHeaders() {
+  const key = process.env.BLAND_API_KEY;
+  if (!key) {
+    throw new Error("BLAND_API_KEY environment variable is not set");
+  }
   return {
     "Content-Type": "application/json",
-    authorization: process.env.BLAND_API_KEY!,
+    authorization: key,
   };
 }
 
 export async function purchasePhoneNumber(areaCode: string = "208") {
-  const res = await fetch(`${BLAND_BASE_URL}/inbound-purchase`, {
+  const headers = getHeaders();
+  const body = { area_code: areaCode, country_code: "US" };
+
+  const res = await fetch(`${BLAND_BASE_URL}/inbound/purchase`, {
     method: "POST",
-    headers: getHeaders(),
-    body: JSON.stringify({ area_code: areaCode, country_code: "US" }),
+    headers,
+    body: JSON.stringify(body),
   });
-  return res.json();
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    console.error("Bland purchase error:", res.status, data);
+    return {
+      error: true,
+      message: data?.message || data?.error || `Bland API returned ${res.status}`,
+      details: data,
+    };
+  }
+
+  return data;
 }
 
 export async function configureInboundAgent(
@@ -35,7 +54,19 @@ export async function configureInboundAgent(
     headers: getHeaders(),
     body: JSON.stringify(config),
   });
-  return res.json();
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    console.error("Bland configure error:", res.status, data);
+    return {
+      error: true,
+      message: data?.message || data?.error || `Bland API returned ${res.status}`,
+      details: data,
+    };
+  }
+
+  return { status: "success", ...data };
 }
 
 export async function getCallDetails(callId: string) {

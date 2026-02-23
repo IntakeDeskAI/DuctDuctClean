@@ -1,15 +1,37 @@
 import { NextResponse } from "next/server";
+import crypto from "crypto";
 import { createAdminClient } from "@/lib/supabase/admin";
 
-export async function POST(request: Request) {
-  // Verify webhook secret
-  const secret = request.headers.get("x-webhook-secret");
-  if (secret !== process.env.BLAND_WEBHOOK_SECRET) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+function verifyWebhookSignature(
+  secret: string,
+  body: unknown,
+  signature: string
+): boolean {
+  const expected = crypto
+    .createHmac("sha256", secret)
+    .update(JSON.stringify(body))
+    .digest("hex");
+  return expected === signature;
+}
 
+export async function POST(request: Request) {
   try {
     const body = await request.json();
+
+    // Verify Bland.ai HMAC-SHA256 webhook signature
+    const signature = request.headers.get("x-webhook-signature");
+    const webhookSecret = process.env.BLAND_WEBHOOK_SECRET;
+
+    if (webhookSecret && signature) {
+      if (!verifyWebhookSignature(webhookSecret, body, signature)) {
+        console.error("Webhook signature verification failed");
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+    } else if (webhookSecret && !signature) {
+      console.error("Missing X-Webhook-Signature header");
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const supabase = createAdminClient();
 
     const {

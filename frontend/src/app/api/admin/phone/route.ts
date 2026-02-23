@@ -48,6 +48,12 @@ export async function POST(request: Request) {
     const body = await request.json();
 
     if (body.action === "purchase_number") {
+      if (!process.env.BLAND_API_KEY) {
+        return NextResponse.json(
+          { error: "BLAND_API_KEY is not configured. Add it in Vercel environment variables." },
+          { status: 500 }
+        );
+      }
       const result = await purchasePhoneNumber(body.area_code || "208");
       return NextResponse.json(result);
     }
