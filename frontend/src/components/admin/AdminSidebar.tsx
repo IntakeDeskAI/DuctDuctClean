@@ -1,16 +1,24 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { LayoutDashboard, Users, Phone, Mail, CalendarDays, HardHat, Megaphone, BookOpen, Settings, LogOut } from "lucide-react";
 
-const navItems = [
+type BadgeKey = "leads" | "calls" | "emails" | "schedules" | "technicians";
+
+const navItems: {
+  label: string;
+  href: string;
+  icon: typeof LayoutDashboard;
+  badgeKey?: BadgeKey;
+}[] = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
-  { label: "Leads", href: "/admin/leads", icon: Users },
-  { label: "Schedule", href: "/admin/schedule", icon: CalendarDays },
-  { label: "Technicians", href: "/admin/technicians", icon: HardHat },
-  { label: "Phone", href: "/admin/phone", icon: Phone },
-  { label: "Email", href: "/admin/email", icon: Mail },
+  { label: "Leads", href: "/admin/leads", icon: Users, badgeKey: "leads" },
+  { label: "Schedule", href: "/admin/schedule", icon: CalendarDays, badgeKey: "schedules" },
+  { label: "Technicians", href: "/admin/technicians", icon: HardHat, badgeKey: "technicians" },
+  { label: "Phone", href: "/admin/phone", icon: Phone, badgeKey: "calls" },
+  { label: "Email", href: "/admin/email", icon: Mail, badgeKey: "emails" },
   { label: "Marketing", href: "/admin/marketing", icon: Megaphone },
   { label: "Blog", href: "/admin/blog", icon: BookOpen },
   { label: "Settings", href: "/admin/settings", icon: Settings },
@@ -19,6 +27,25 @@ const navItems = [
 export default function AdminSidebar() {
   const pathname = usePathname();
   const router = useRouter();
+  const [counts, setCounts] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    async function fetchCounts() {
+      try {
+        const res = await fetch("/api/admin/counts");
+        if (res.ok) {
+          const data = await res.json();
+          setCounts(data);
+        }
+      } catch {
+        // silently fail
+      }
+    }
+    fetchCounts();
+    // Refresh counts every 60 seconds
+    const interval = setInterval(fetchCounts, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
   async function handleLogout() {
     await fetch("/api/admin/auth", { method: "DELETE" });
@@ -41,6 +68,8 @@ export default function AdminSidebar() {
             item.href === "/admin"
               ? pathname === "/admin"
               : pathname.startsWith(item.href);
+          const count = item.badgeKey ? counts[item.badgeKey] : undefined;
+
           return (
             <Link
               key={item.href}
@@ -52,7 +81,20 @@ export default function AdminSidebar() {
               }`}
             >
               <Icon className="h-5 w-5" />
-              {item.label}
+              <span className="flex-1">{item.label}</span>
+              {count !== undefined && count > 0 && (
+                <span
+                  className={`min-w-[20px] h-5 flex items-center justify-center rounded-full text-xs font-semibold px-1.5 ${
+                    isActive
+                      ? "bg-brand-600 text-white"
+                      : item.badgeKey === "leads"
+                      ? "bg-red-500/90 text-white"
+                      : "bg-brand-800 text-brand-200"
+                  }`}
+                >
+                  {count > 99 ? "99+" : count}
+                </span>
+              )}
             </Link>
           );
         })}
