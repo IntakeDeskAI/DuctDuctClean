@@ -9,6 +9,13 @@ import {
   EMAIL_TEMPLATE_PROMPT,
   SOCIAL_POST_PROMPT,
   BLOG_IDEAS_PROMPT,
+  SMS_TEMPLATE_PROMPT,
+  SEASONAL_PROMO_PROMPT,
+  REVIEW_RESPONSE_PROMPT,
+  GOOGLE_BUSINESS_POST_PROMPT,
+  CAMPAIGN_CONTENT_PROMPT,
+  WEEKLY_SOCIAL_POSTS_PROMPT,
+  COUPON_DESCRIPTION_PROMPT,
 } from "@/lib/ai/prompts";
 import type { ContactSubmission } from "@/types";
 
@@ -35,8 +42,9 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
-    const { action, leadId, serviceType, platform, topic, customInstructions } =
-      body;
+    const { action, leadId, serviceType, platform, topic, customInstructions,
+      tone, season, reviewType, reviewText, campaignType, audience,
+      platforms, discountType, discountValue } = body;
 
     let prompt: string;
 
@@ -74,6 +82,34 @@ export async function POST(request: Request) {
       }
       case "blog_ideas": {
         prompt = BLOG_IDEAS_PROMPT;
+        break;
+      }
+      case "sms_template": {
+        prompt = SMS_TEMPLATE_PROMPT(serviceType || "residential", tone || "professional");
+        break;
+      }
+      case "seasonal_promo": {
+        prompt = SEASONAL_PROMO_PROMPT(season || "winter", serviceType || "residential", tone || "seasonal");
+        break;
+      }
+      case "review_response": {
+        prompt = REVIEW_RESPONSE_PROMPT(reviewType || "positive", reviewText);
+        break;
+      }
+      case "google_business_post": {
+        prompt = GOOGLE_BUSINESS_POST_PROMPT(topic, tone || "professional");
+        break;
+      }
+      case "campaign_content": {
+        prompt = CAMPAIGN_CONTENT_PROMPT(campaignType || "email", audience || "all_customers", tone || "professional");
+        break;
+      }
+      case "weekly_social_posts": {
+        prompt = WEEKLY_SOCIAL_POSTS_PROMPT(platforms || ["facebook", "instagram", "google-business"]);
+        break;
+      }
+      case "coupon_description": {
+        prompt = COUPON_DESCRIPTION_PROMPT(discountType || "percentage", discountValue || 10, serviceType);
         break;
       }
       default:

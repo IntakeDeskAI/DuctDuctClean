@@ -203,3 +203,76 @@ export interface BlogPost {
   keywords: string[];
   sections: BlogSection[];
 }
+
+// ===========================
+// Marketing Hub Types
+// ===========================
+
+export interface MarketingCampaign {
+  id: string;
+  name: string;
+  type: "email" | "sms" | "both";
+  status: "draft" | "scheduled" | "sending" | "completed" | "cancelled";
+  target_audience:
+    | "all_customers"
+    | "all_leads"
+    | "new_leads"
+    | "converted_only"
+    | "custom";
+  custom_filter: Record<string, unknown> | null;
+  subject: string | null;
+  content: string;
+  sms_content: string | null;
+  scheduled_for: string | null;
+  sent_count: number;
+  delivered_count: number;
+  opened_count: number;
+  clicked_count: number;
+  converted_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ContentLibraryItem {
+  id: string;
+  type:
+    | "email"
+    | "social"
+    | "sms"
+    | "promo"
+    | "blog_idea"
+    | "review_response"
+    | "google_post";
+  platform: string | null;
+  tone: "professional" | "friendly" | "urgent" | "seasonal";
+  title: string | null;
+  content: string;
+  tags: string[];
+  is_favorite: boolean;
+  created_at: string;
+}
+
+export interface MarketingCoupon {
+  id: string;
+  code: string;
+  description: string | null;
+  discount_type: "percentage" | "fixed";
+  discount_value: number;
+  max_uses: number | null;
+  current_uses: number;
+  service_type: string | null;
+  expires_at: string | null;
+  is_active: boolean;
+  revenue_generated: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface MarketingActionLog {
+  id: string;
+  action_type: string;
+  description: string;
+  result: Record<string, unknown>;
+  status: "running" | "completed" | "failed";
+  created_at: string;
+}

@@ -184,3 +184,151 @@ Focus on topics that:
 - Are relevant to Eastern Idaho's climate and conditions
 - Have good search volume potential
 - Position DuctDuctClean as the local expert`;
+
+// ===========================
+// Marketing Hub Prompts
+// ===========================
+
+const toneInstructions: Record<string, string> = {
+  professional: "Use a professional, trustworthy tone. Polished but approachable.",
+  friendly: "Use a warm, conversational, neighborly tone. Like talking to a friend.",
+  urgent: "Create urgency with time-sensitive language. Limited time, act now, don't miss out.",
+  seasonal: "Tie into the current season and weather. Reference local conditions in Idaho Falls.",
+};
+
+export function SMS_TEMPLATE_PROMPT(serviceType: string, tone: string) {
+  return `Generate 3 SMS marketing messages for DuctDuctClean's ${serviceType.replace("-", " ")} service.
+
+${businessContext}
+
+Tone: ${toneInstructions[tone] || toneInstructions.professional}
+
+Rules:
+- Each message MUST be under 160 characters (this is critical for SMS)
+- Include a clear call-to-action (call, text, or visit website)
+- Use the phone number (208) 470-8020
+- Make each message different in approach (one benefit-focused, one seasonal, one offer-based)
+- Number each message 1, 2, 3
+- Do NOT use hashtags`;
+}
+
+export function SEASONAL_PROMO_PROMPT(season: string, serviceType: string, tone: string) {
+  return `Generate a complete seasonal marketing promotion for DuctDuctClean.
+
+${businessContext}
+
+Season: ${season}
+Service Focus: ${serviceType.replace("-", " ")}
+Tone: ${toneInstructions[tone] || toneInstructions.seasonal}
+
+Generate ALL of the following:
+
+1. EMAIL VERSION:
+- Subject line (under 50 chars)
+- Body (150-200 words) with seasonal hook, service benefits, clear CTA
+
+2. SMS VERSION:
+- One text message under 160 characters
+
+3. SOCIAL POST:
+- Facebook/Instagram post (100-150 words with 5 relevant hashtags)
+
+Make everything cohesive — same promotion, same seasonal angle, adapted per channel.
+Reference Idaho Falls weather and local conditions for the ${season} season.`;
+}
+
+export function REVIEW_RESPONSE_PROMPT(reviewType: "positive" | "negative", reviewText?: string) {
+  return `Generate a professional response to a ${reviewType} Google review for DuctDuctClean.
+
+${businessContext}
+
+Review type: ${reviewType}
+${reviewText ? `Review text: "${reviewText}"` : "Generate a generic template response."}
+
+Guidelines:
+- Keep the response under 100 words
+- ${reviewType === "positive" ? "Thank them warmly, mention their specific service if possible, invite them to refer friends" : "Apologize sincerely, acknowledge the issue, offer to make it right, provide contact info for the owner"}
+- Sound genuine and human, not corporate
+- Sign off as "The DuctDuctClean Team"
+- ${reviewType === "negative" ? "Do NOT be defensive. Be empathetic and solution-oriented." : "Express genuine gratitude."}`;
+}
+
+export function GOOGLE_BUSINESS_POST_PROMPT(topic: string | undefined, tone: string) {
+  return `Generate a Google Business Profile post for DuctDuctClean.
+
+${businessContext}
+
+${topic ? `Topic: ${topic}` : "Choose a compelling topic (service highlight, seasonal tip, or customer benefit)."}
+Tone: ${toneInstructions[tone] || toneInstructions.professional}
+
+Requirements:
+- 80-100 words (Google Business posts should be concise)
+- Include relevant local keywords (Idaho Falls, Eastern Idaho)
+- Include a call-to-action (call, book online, get a quote)
+- Professional but personable
+- Do NOT use hashtags (not supported on Google Business)
+- Include the phone number when mentioning contact`;
+}
+
+export function CAMPAIGN_CONTENT_PROMPT(campaignType: string, audience: string, tone: string) {
+  return `Generate marketing campaign content for DuctDuctClean.
+
+${businessContext}
+
+Campaign type: ${campaignType}
+Target audience: ${audience}
+Tone: ${toneInstructions[tone] || toneInstructions.professional}
+
+Generate:
+
+1. EMAIL:
+- Subject line (compelling, under 50 chars)
+- Email body (200-250 words)
+- Clear call-to-action
+
+2. SMS (if applicable):
+- Text message under 160 characters
+
+The content should be ready to send to ${audience === "all_customers" ? "existing customers" : audience === "new_leads" ? "new leads who haven't converted" : audience === "converted_only" ? "past customers" : "all contacts"}.
+
+Make it compelling and actionable. Include specific DuctDuctClean service details.`;
+}
+
+export function WEEKLY_SOCIAL_POSTS_PROMPT(platforms: string[]) {
+  return `Generate a week's worth of social media content for DuctDuctClean.
+
+${businessContext}
+
+Create 3 distinct posts for these platforms: ${platforms.join(", ")}
+
+For each post:
+1. Specify which platform it's for
+2. Write the post content following platform-specific best practices:
+   - Facebook: conversational, 1-2 paragraphs, CTA
+   - Instagram: engaging caption with 8-10 relevant hashtags
+   - Google Business: professional, 80-100 words, local SEO keywords
+
+3. Suggest the best day/time to post
+
+Make each post about a different angle:
+- Post 1: Educational tip (air quality, HVAC maintenance)
+- Post 2: Service highlight or seasonal promotion
+- Post 3: Community/local engagement (Idaho Falls pride, local events)
+
+Keep it authentic, not salesy.`;
+}
+
+export function COUPON_DESCRIPTION_PROMPT(discountType: string, discountValue: number, serviceType?: string) {
+  return `Write a short, compelling promotional description for this DuctDuctClean coupon:
+
+Discount: ${discountType === "percentage" ? `${discountValue}% off` : `$${discountValue} off`}
+${serviceType ? `Service: ${serviceType.replace("-", " ")}` : "Applicable to all services"}
+
+Write 2-3 sentences that:
+- Highlight the savings
+- Create urgency
+- Mention the service benefit
+- Sound professional but exciting
+
+Keep it under 50 words total.`;
+}
