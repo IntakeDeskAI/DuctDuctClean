@@ -103,8 +103,8 @@ export async function POST(request: NextRequest) {
       estimated_duration: estimated_duration || 120,
       notes: notes || null,
       status: "scheduled",
-      notification_status: notify_now ? "pending" : "pending",
-      notify_at: notify_now ? new Date().toISOString() : null,
+      notification_status: "pending",
+      notify_at: new Date().toISOString(),
     })
     .select()
     .single();
