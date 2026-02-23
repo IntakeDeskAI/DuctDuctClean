@@ -1,4 +1,3 @@
-import Image from "next/image";
 import {
   Phone,
   ArrowRight,
@@ -7,6 +6,10 @@ import {
   Clock,
   Percent,
   MapPin,
+  Wind,
+  Zap,
+  Heart,
+  AlertTriangle,
 } from "lucide-react";
 import { siteConfig } from "@/config/site";
 
@@ -93,30 +96,44 @@ export default function HeroSection() {
             </div>
           </div>
 
-          {/* Right Side — Hero Image */}
+          {/* Right Side — Why Clean Your Ducts Stats */}
           <div className="hidden lg:block">
-            <div className="relative rounded-2xl overflow-hidden">
-              <Image
-                src="https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=800&h=600&fit=crop&q=80"
-                alt="Professional HVAC technician cleaning air ducts"
-                width={800}
-                height={600}
-                className="rounded-2xl object-cover"
-                priority
-              />
-              {/* Overlay gradient */}
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-brand-900/30 to-transparent" />
-              {/* Floating Stats Card */}
-              <div className="absolute -bottom-6 -left-6 rounded-xl bg-white shadow-xl p-4">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-accent-100 flex items-center justify-center">
-                    <Star className="h-5 w-5 text-accent-600" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold text-gray-900">500+</p>
-                    <p className="text-xs text-gray-500">Happy Customers</p>
-                  </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="rounded-2xl bg-white/10 backdrop-blur-sm border border-white/10 p-6">
+                <div className="h-12 w-12 rounded-xl bg-accent-500/20 flex items-center justify-center mb-4">
+                  <Wind className="h-6 w-6 text-accent-400" />
                 </div>
+                <p className="text-3xl font-bold text-white">2–5x</p>
+                <p className="text-sm text-brand-200 mt-1">
+                  Indoor air can be more polluted than outdoor air (EPA)
+                </p>
+              </div>
+              <div className="rounded-2xl bg-white/10 backdrop-blur-sm border border-white/10 p-6">
+                <div className="h-12 w-12 rounded-xl bg-accent-500/20 flex items-center justify-center mb-4">
+                  <Zap className="h-6 w-6 text-accent-400" />
+                </div>
+                <p className="text-3xl font-bold text-white">25–40%</p>
+                <p className="text-sm text-brand-200 mt-1">
+                  Energy wasted by HVAC systems with dirty ducts
+                </p>
+              </div>
+              <div className="rounded-2xl bg-white/10 backdrop-blur-sm border border-white/10 p-6">
+                <div className="h-12 w-12 rounded-xl bg-accent-500/20 flex items-center justify-center mb-4">
+                  <Heart className="h-6 w-6 text-accent-400" />
+                </div>
+                <p className="text-3xl font-bold text-white">40 lbs</p>
+                <p className="text-sm text-brand-200 mt-1">
+                  Dust created per year in an average 6-room home
+                </p>
+              </div>
+              <div className="rounded-2xl bg-white/10 backdrop-blur-sm border border-white/10 p-6">
+                <div className="h-12 w-12 rounded-xl bg-accent-500/20 flex items-center justify-center mb-4">
+                  <AlertTriangle className="h-6 w-6 text-accent-400" />
+                </div>
+                <p className="text-3xl font-bold text-white">2,900</p>
+                <p className="text-sm text-brand-200 mt-1">
+                  Home fires per year caused by clogged dryer vents
+                </p>
               </div>
             </div>
           </div>

@@ -27,8 +27,11 @@ export default function BlogPostsTable({ posts }: BlogPostsTableProps) {
   const [generating, setGenerating] = useState(false);
   const [updating, setUpdating] = useState<string | null>(null);
 
+  const [error, setError] = useState<string | null>(null);
+
   async function handleGenerate() {
     setGenerating(true);
+    setError(null);
     try {
       const res = await fetch("/api/admin/blog", {
         method: "POST",
@@ -37,9 +40,12 @@ export default function BlogPostsTable({ posts }: BlogPostsTableProps) {
       });
       if (res.ok) {
         router.refresh();
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setError(data.details || data.error || "Generation failed");
       }
-    } catch {
-      // ignore
+    } catch (err) {
+      setError(String(err));
     }
     setGenerating(false);
   }
@@ -76,6 +82,9 @@ export default function BlogPostsTable({ posts }: BlogPostsTableProps) {
           )}
           {generating ? "Generating..." : "Generate New Post"}
         </button>
+        {error && (
+          <p className="mt-2 text-sm text-red-600">{error}</p>
+        )}
       </div>
 
       <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
