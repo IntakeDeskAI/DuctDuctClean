@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, Users, Phone, Mail, CalendarDays, HardHat, Megaphone, BookOpen, Settings, LogOut } from "lucide-react";
+import { LayoutDashboard, Users, Phone, Mail, CalendarDays, HardHat, Megaphone, BookOpen, Settings, LogOut, BarChart3 } from "lucide-react";
 
 type BadgeKey = "leads" | "calls" | "emails" | "schedules" | "technicians";
 
@@ -14,6 +14,7 @@ const navItems: {
   badgeKey?: BadgeKey;
 }[] = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
+  { label: "Analytics", href: "/admin/analytics", icon: BarChart3 },
   { label: "Leads", href: "/admin/leads", icon: Users, badgeKey: "leads" },
   { label: "Schedule", href: "/admin/schedule", icon: CalendarDays, badgeKey: "schedules" },
   { label: "Technicians", href: "/admin/technicians", icon: HardHat, badgeKey: "technicians" },
