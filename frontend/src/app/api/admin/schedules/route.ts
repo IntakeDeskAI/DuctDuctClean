@@ -113,8 +113,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  // If notify_now, trigger notification immediately
-  if (notify_now && schedule) {
+  // Always notify the technician when a job is scheduled
+  if (schedule) {
     const { data: lead } = await supabase
       .from("contact_submissions")
       .select("*")
@@ -122,12 +122,18 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (lead) {
-      // Fire and forget — don't block the response
-      notifyTechnician(
-        schedule as JobSchedule,
-        tech as Technician,
-        lead as ContactSubmission
-      ).catch((err) => console.error("Notification dispatch error:", err));
+      try {
+        const results = await notifyTechnician(
+          schedule as JobSchedule,
+          tech as Technician,
+          lead as ContactSubmission
+        );
+        console.log(`Notification results for schedule ${schedule.id}:`, JSON.stringify(results));
+        return NextResponse.json({ ...schedule, notification_results: results }, { status: 201 });
+      } catch (err) {
+        console.error("Notification dispatch error:", err);
+        return NextResponse.json({ ...schedule, notification_error: String(err) }, { status: 201 });
+      }
     }
   }
 
