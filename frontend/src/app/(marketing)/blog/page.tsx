@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import { blogPosts } from "@/data/blog-posts";
+import { getAllPublishedPosts } from "@/lib/supabase/blog";
 import BlogCard from "@/components/ui/BlogCard";
+
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Blog",
@@ -8,7 +10,9 @@ export const metadata: Metadata = {
     "Tips and guides on air duct cleaning, indoor air quality, HVAC maintenance, and home safety from the DuctDuctClean team in Idaho Falls, ID.",
 };
 
-export default function BlogPage() {
+export default async function BlogPage() {
+  const posts = await getAllPublishedPosts();
+
   return (
     <>
       {/* Hero */}
@@ -31,7 +35,7 @@ export default function BlogPage() {
       <section className="py-20 sm:py-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {blogPosts.map((post) => (
+            {posts.map((post) => (
               <BlogCard key={post.slug} post={post} />
             ))}
           </div>

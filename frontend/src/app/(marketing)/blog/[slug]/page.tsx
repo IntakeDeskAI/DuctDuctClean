@@ -1,20 +1,28 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, Calendar, Clock, User } from "lucide-react";
-import { blogPosts, getBlogPostBySlug, getAllBlogSlugs } from "@/data/blog-posts";
+import {
+  getPostBySlug,
+  getAllPostSlugs,
+  getAllPublishedPosts,
+} from "@/lib/supabase/blog";
 import { formatDate } from "@/lib/utils";
 import { notFound } from "next/navigation";
 
-export function generateStaticParams() {
-  return getAllBlogSlugs().map((slug) => ({ slug }));
+export const revalidate = 3600;
+export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  const slugs = await getAllPostSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
-export function generateMetadata({
+export async function generateMetadata({
   params,
 }: {
   params: { slug: string };
-}): Metadata {
-  const post = getBlogPostBySlug(params.slug);
+}): Promise<Metadata> {
+  const post = await getPostBySlug(params.slug);
   if (!post) return { title: "Post Not Found" };
   return {
     title: post.title,
@@ -23,15 +31,16 @@ export function generateMetadata({
   };
 }
 
-export default function BlogPostPage({
+export default async function BlogPostPage({
   params,
 }: {
   params: { slug: string };
 }) {
-  const post = getBlogPostBySlug(params.slug);
+  const post = await getPostBySlug(params.slug);
   if (!post) notFound();
 
-  const relatedPosts = blogPosts
+  const allPosts = await getAllPublishedPosts();
+  const relatedPosts = allPosts
     .filter((p) => p.slug !== post.slug)
     .slice(0, 2);
 

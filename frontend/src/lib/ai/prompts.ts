@@ -132,6 +132,43 @@ ${topic ? `Topic/angle: ${topic}` : "Choose an engaging topic related to the bus
 Make it authentic and engaging. Do NOT sound overly salesy.`;
 }
 
+export function GENERATE_BLOG_POST_PROMPT(existingSlugs: string[]) {
+  const today = new Date().toISOString().split("T")[0];
+
+  return `You are an SEO content writer for DuctDuctClean, a professional air duct cleaning company in Idaho Falls, Idaho.
+
+${businessContext}
+
+Existing blog post slugs (DO NOT repeat these topics):
+${existingSlugs.map((s) => `- ${s}`).join("\n")}
+
+Generate a new blog post as a JSON object with this exact structure:
+{
+  "slug": "url-friendly-slug-with-dashes",
+  "title": "SEO-Optimized Title (under 60 chars)",
+  "excerpt": "Compelling 1-2 sentence summary for the blog card",
+  "category": "One of: Air Quality, Safety, Health & Wellness, HVAC Tips, Seasonal, Energy Efficiency",
+  "author": "DuctDuctClean Team",
+  "publishedAt": "${today}",
+  "readTime": 5,
+  "metaDescription": "SEO meta description under 160 characters",
+  "keywords": ["keyword1", "keyword2", "keyword3", "keyword4", "keyword5"],
+  "sections": [
+    { "heading": "Section Title", "content": "Paragraph text (150-250 words)..." },
+    { "heading": "Section Title", "content": "Intro text...", "list": ["item1", "item2", "item3"] }
+  ]
+}
+
+Requirements:
+- Write 4-6 sections with substantial content (150-250 words per section)
+- Include at least 2 sections with bullet point lists
+- Focus on topics relevant to Idaho Falls / Eastern Idaho homeowners
+- Include local references (Idaho Falls, Ammon, Rexburg, Eastern Idaho climate)
+- Use natural language, avoid keyword stuffing
+- The final section should include a soft CTA mentioning DuctDuctClean services
+- Return ONLY valid JSON, no markdown fences or extra text`;
+}
+
 export const BLOG_IDEAS_PROMPT = `Generate 5 SEO-optimized blog topic ideas for DuctDuctClean, an air duct cleaning company in Idaho Falls, Idaho.
 
 ${businessContext}

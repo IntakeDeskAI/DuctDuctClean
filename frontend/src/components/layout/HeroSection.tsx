@@ -1,3 +1,4 @@
+import Image from "next/image";
 import {
   Phone,
   ArrowRight,
@@ -92,22 +93,19 @@ export default function HeroSection() {
             </div>
           </div>
 
-          {/* Right Side — Image Placeholder */}
+          {/* Right Side — Hero Image */}
           <div className="hidden lg:block">
-            <div className="relative rounded-2xl bg-brand-700/30 border border-brand-600/20 p-8 backdrop-blur-sm">
-              <div className="aspect-[4/3] rounded-xl bg-brand-600/20 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="mx-auto h-20 w-20 rounded-full bg-brand-500/30 flex items-center justify-center mb-4">
-                    <Shield className="h-10 w-10 text-brand-200" />
-                  </div>
-                  <p className="text-brand-200 text-sm font-medium">
-                    Hero Image
-                  </p>
-                  <p className="text-brand-400 text-xs mt-1">
-                    Replace with team/service photo
-                  </p>
-                </div>
-              </div>
+            <div className="relative rounded-2xl overflow-hidden">
+              <Image
+                src="https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=800&h=600&fit=crop&q=80"
+                alt="Professional HVAC technician cleaning air ducts"
+                width={800}
+                height={600}
+                className="rounded-2xl object-cover"
+                priority
+              />
+              {/* Overlay gradient */}
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-brand-900/30 to-transparent" />
               {/* Floating Stats Card */}
               <div className="absolute -bottom-6 -left-6 rounded-xl bg-white shadow-xl p-4">
                 <div className="flex items-center gap-3">
