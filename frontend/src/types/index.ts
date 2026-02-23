@@ -79,6 +79,26 @@ export interface ContactSubmission {
   updated_at: string;
 }
 
+export interface CallLog {
+  id: string;
+  bland_call_id: string;
+  phone_number: string;
+  direction: "inbound" | "outbound";
+  status: "completed" | "transferred" | "voicemail" | "failed" | "no_answer";
+  duration_seconds: number | null;
+  transcript: string | null;
+  recording_url: string | null;
+  summary: string | null;
+  analysis: Record<string, unknown> | null;
+  contact_submission_id: string | null;
+  caller_name: string | null;
+  caller_intent: string | null;
+  service_interested: string | null;
+  transferred: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface BlogSection {
   heading?: string;
   content: string;
